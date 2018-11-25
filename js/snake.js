@@ -14,6 +14,11 @@ var QUIT = false;
 // Key booleans
 var left = right = up = down = false;
 
+
+// Sounds
+var eatApple = new Audio("sounds/eatApple.wav");
+var bump = new Audio("sounds/bump.wav");
+
 /*Snake variables = change later to make robust
 var snake = {
     x : canvas.width/2,
@@ -155,17 +160,33 @@ function snakeMovement() {
 function collisionDetection() {
     // Colliding with walls
     if (x > canvas.width - snakeRect) {
+        bump.play();
         QUIT = true;
     } else if (x < 0) {
+        bump.play();
         QUIT = true;
     } else if (y > canvas.height - snakeRect) {
+        bump.play();
         QUIT = true;
     } else if (y < 0) {
+        bump.play();
         QUIT = true;
     }
 
-    // Eat the FUCKING APPLE
+    // Collision with tail
+    for (i = 0; i < tailArray.length; i++) {
+        if (x === tailArray[i].xTail && y === tailArray[i].yTail) {
+            bump.play();
+            QUIT = true;
+        }
+    }
+
+    // Eat the APPLE
     if (x <= xApple + appleRadius && x >= xApple - appleRadius && y <= yApple + appleRadius && y >= yApple - appleRadius) {
+        
+        // Play eating sound
+        eatApple.play();
+        
         do {
             randomAppleVariables();
         } while (randomAgain);
@@ -189,12 +210,7 @@ function collisionDetection() {
         console.log(`Numbers of apple(s) eaten: ${appleAte - 1}`);
     }
 
-    for (i = 0; i < tailArray.length; i++) {
-        if (x === tailArray[i].xTail && y === tailArray[i].yTail) {
-          
-            QUIT = true;
-        }
-    }
+
 }
 
 // Key handlers
